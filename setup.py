@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="name_markup_language",
-    version="0.0.1",
+    version="1.0.1",
     author="SonNTS996",
     author_email="sonnts996@gmail.com",
     description="Name Markup Language",

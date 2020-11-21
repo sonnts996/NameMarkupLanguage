@@ -1,16 +1,18 @@
 sep = '#'
 import_pattern = "#\[.*?#.*?\]"
 
+import NameMarkupLanguage.NameMarkInterface as NMI
+
 
 def isDef(data: str) -> bool:
     import re
     return re.search(import_pattern, data) is not None
 
 
-class DefTag:
+class DefTag(NMI.DefTag):
     def __init__(self, nmlID="#"):
-        self.__category__ = ""
-        self.__mID__ = ""
+        super(DefTag, self).__init__()
+
         if nmlID.startswith('#['):
             nmlID = nmlID[2:]
         elif nmlID.startswith('['):
@@ -49,14 +51,3 @@ class DefTag:
 
     def setId(self, mid):
         self.__mID__ = mid
-
-    def __str__(self):
-        return self.nmlId()
-
-    def __eq__(self, other):
-        if isinstance(other, DefTag):
-            return other.nmlId() == self.nmlId()
-        elif isinstance(other, str):
-            return other == self.nmlId()
-        else:
-            return False

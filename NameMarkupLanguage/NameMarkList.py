@@ -1,16 +1,15 @@
-from typing import List
-
-from packaging_tutorial.NameMarkupLanguage.NameMark import NameMark
+import NameMarkupLanguage.NameMarkInterface as  NMI
 
 
-class NMList:
+class NMList(NMI.NMList):
+
     def __init__(self):
-        self.__lst__: List[NameMark] = []
+        super(NMList, self).__init__()
 
-    def append(self, nml: NameMark):
+    def append(self, nml: NMI.NameMark):
         self.__lst__.append(nml)
 
-    def remove(self, nml: NameMark):
+    def remove(self, nml: NMI.NameMark):
         if nml in self.__lst__:
             self.__lst__.remove(nml)
 
@@ -27,26 +26,3 @@ class NMList:
 
     def count(self):
         return len(self.__lst__)
-
-    def __getitem__(self, item) -> NameMark:
-        if isinstance(item, int):
-            return self.__lst__[item]
-        elif isinstance(item, str):
-            for nml in self.__lst__:
-                if nml.nmlId() == item:
-                    return nml
-
-    def __contains__(self, item):
-        return self.__lst__.__contains__(item)
-
-    def __iter__(self):
-        self.__inx__ = 0
-        return self
-
-    def __next__(self):
-        if self.__inx__ < len(self.__lst__):
-            a = self.__lst__[self.__inx__]
-            self.__inx__ += 1
-            return a
-        else:
-            raise StopIteration

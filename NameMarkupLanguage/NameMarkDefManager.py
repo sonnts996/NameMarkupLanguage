@@ -1,22 +1,20 @@
 from typing import Any, List
 
-from packaging_tutorial.NameMarkupLanguage.NameMarkList import NMList
-from packaging_tutorial.NameMarkupLanguage.NameMark import NameMark
-from packaging_tutorial.NameMarkupLanguage.NameMarkDef import DefTag
+import NameMarkupLanguage.NameMarkInterface as NMI
 
 
-class DefManager(NMList):
+class DefManager(NMI.DefManager):
 
     def __init__(self):
         super().__init__()
 
-    def append(self, xDef: NameMark):
+    def append(self, xDef: NMI.NameMark):
         if xDef not in self.__lst__:
-            super(DefManager, self).append(xDef)
+            self.__lst__.append(xDef)
             xDef.setDef(True)
             xDef.setDefManager(self)
 
-    def get(self, nmlId: DefTag, prop: str = None) -> Any:
+    def get(self, nmlId: NMI.DefTag, prop: str = None) -> Any:
         if prop is None:
             for nml in self.__lst__:
                 if nml.nmlId() == nmlId.nmlId():
@@ -26,13 +24,13 @@ class DefManager(NMList):
                 if nml.nmlId() == nmlId.nmlId():
                     return nml.prop(prop)
 
-    def isValid(self, nml: NameMark) -> bool:
+    def isValid(self, nml: NMI.NameMark) -> bool:
         if nml.nmlId() != "" and not nml.nmlId().isspace():
             return nml.isValid()
         else:
             return False
 
-    def commit(self, nml: NameMark) -> bool:
+    def commit(self, nml: NMI.NameMark) -> bool:
         if not self.isValid(nml):
             return False
 

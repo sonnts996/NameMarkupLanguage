@@ -1,21 +1,15 @@
 from typing import Any, List
 
-from packaging_tutorial.NameMarkupLanguage.NameMarkDef import DefTag
+import NameMarkupLanguage.NameMarkInterface as NMI
+
+sep = "#"
+tSep = "--"
 
 
-class NameMark:
-    sep = "#"
-    tSep = "--"
+class NameMark(NMI.NameMark):
 
     def __init__(self):
-        self.__mPath__: str = ""
-        self.__mName__: str = ""
-        self.__mCategory__: str = ""
-        self.__mID__: str = ""
-        self.__mTag__: dict = {}
-        self.__mDef__: bool = False
-        self.__mDelete__: bool = False
-        self.__mDefManager__ = None
+        super(NameMark, self).__init__()
 
     def name(self) -> str:
         return self.__mName__
@@ -38,7 +32,7 @@ class NameMark:
             if isinstance(PROP, list):
                 lst: List[str] = []
                 for p in PROP:
-                    if isinstance(p, DefTag) and not self.isDef():
+                    if isinstance(p, NMI.DefTag) and not self.isDef():
                         if self.isDef() and self.__mDefManager__ is not None:
                             rs = self.__mDefManager__.get(p, prop)
                             if isinstance(rs, list):
@@ -50,7 +44,7 @@ class NameMark:
                     else:
                         lst.append(p)
                 return lst
-            elif isinstance(PROP, DefTag) and not self.isDef() and self.__mDefManager__ is not None:
+            elif isinstance(PROP, NMI.DefTag) and not self.isDef() and self.__mDefManager__ is not None:
                 return self.__mDefManager__.get(PROP, prop)
             else:
                 return PROP
@@ -61,12 +55,12 @@ class NameMark:
             if isinstance(PROP, list):
                 lst: List[str] = []
                 for p in PROP:
-                    if isinstance(p, DefTag):
+                    if isinstance(p, NMI.DefTag):
                         lst.append(p.nmlId())
                     else:
                         lst.append(p)
                 return lst
-            elif isinstance(PROP, DefTag) and not self.isDef():
+            elif isinstance(PROP, NMI.DefTag) and not self.isDef():
                 return PROP.nmlId()
             else:
                 return PROP
@@ -74,17 +68,20 @@ class NameMark:
     def isDef(self):
         return self.__mDef__
 
+    def defManager(self) -> NMI.DefManager:
+        return self.__mDefManager__
+
     def nmlId(self) -> str:
         if self.category() == "" or self.category().isspace():
             if self.mid() == "" or self.mid().isspace():
                 return ""
             else:
-                return self.sep + self.mid()
+                return sep + self.mid()
         else:
             if self.mid() == "" or self.mid().isspace():
                 return self.category()
             else:
-                return self.sep.join([self.category(), self.mid()])
+                return sep.join([self.category(), self.mid()])
 
     def nmlDisplayId(self) -> str:
         return '[%s]' % self.nmlId()
@@ -110,7 +107,7 @@ class NameMark:
     def setDef(self, isDef):
         self.__mDef__ = isDef
 
-    def setDefManager(self, defManager):
+    def setDefManager(self, defManager:NMI.DefManager):
         self.__mDefManager__ = defManager
         if self.isDef() and self not in defManager:
             defManager.append(self)
@@ -146,21 +143,18 @@ class NameMark:
         s = ""
         for tag in self.__mTag__:
             value = self.__mTag__[tag]
-            s = s + self.tSep + tag
+            s = s + tSep + tag
             if isinstance(value, str):
                 if value != "" and not value.isspace():
-                    s = s + self.sep + value
+                    s = s + sep + value
             elif isinstance(value, list):
                 for v in value:
-                    if isinstance(v, DefTag):
+                    if isinstance(v, NMI.DefTag):
                         s = s + '#[%s]' % v.nmlId()
                     elif isinstance(v, str):
                         if v != "" and not v.isspace():
-                            s = s + self.sep + v
+                            s = s + sep + v
         return s
-
-    def defManager(self) -> 'DefManager':
-        return self.__mDefManager__
 
     def isValid(self):
         return self.__mName__ != "" and not self.__mName__.isspace() and self.combine() != ""
@@ -247,15 +241,6 @@ class NameMark:
                 except Exception as ex:
                     raise Exception('Commit error: ' + ex.__str__())
         return False
-
-    def __str__(self):
-        return """{\n 'path': %s,\n 'nml': %s,\n 'isDef': %s \n}""" % (self.__mPath__, self.combine(), self.__mDef__)
-
-    def __eq__(self, other):
-        if isinstance(other, NameMark) and other is not None:
-            return other.nmlId() == self.nmlId()
-        else:
-            return False
 
     def isSameFile(self, other: str):
         return other == self.path()

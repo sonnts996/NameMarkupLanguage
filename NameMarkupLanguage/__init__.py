@@ -2,10 +2,10 @@ import os
 import re
 from typing import List
 
-import packaging_tutorial.NameMarkupLanguage.NameMarkDef as XDef
-from packaging_tutorial.NameMarkupLanguage.NameMark import NameMark
-from packaging_tutorial.NameMarkupLanguage.NameMarkList import NMList
-from packaging_tutorial.NameMarkupLanguage.NameMarkDefManager import DefManager
+from NameMarkupLanguage.NameMark import NameMark, sep, tSep
+from NameMarkupLanguage.NameMarkDef import isDef, DefTag, import_pattern
+from NameMarkupLanguage.NameMarkDefManager import DefManager
+from NameMarkupLanguage.NameMarkList import NMList
 
 category_pattern = "\[.*?\]"
 
@@ -34,7 +34,7 @@ def buildDef(defPath, data: str) -> NameMark:
 def __NMLString__(name: str) -> NameMark:
     nml = NameMark()
     if name != "" and not name.isspace():
-        section = name.split(NameMark.tSep)
+        section = name.split(tSep)
         firstSection = ""
         lastSection = []
         if len(section) > 0:
@@ -53,11 +53,11 @@ def __NMLString__(name: str) -> NameMark:
                         nmlId = nmlId[1:]
                     if nmlId.endswith("]"):
                         nmlId = nmlId[: len(nmlId) - 1]
-                    if NameMark.sep in nmlId:
-                        data = nmlId.split(NameMark.sep)
+                    if sep in nmlId:
+                        data = nmlId.split(sep)
                         if len(data) > 0:
                             nml.setCategory(data[0])
-                            mid = nmlId.replace(data[0] + NameMark.sep, "", 1)
+                            mid = nmlId.replace(data[0] + sep, "", 1)
                             nml.setId(mid)
                     else:
                         nml.setCategory(nmlId)
@@ -71,15 +71,15 @@ def __NMLString__(name: str) -> NameMark:
         tag = {}
         for sec in lastSection:
             if not sec.startswith("#"):
-                if NameMark.sep in sec:
-                    imps = re.findall(XDef.import_pattern, sec)
+                if sep in sec:
+                    imps = re.findall(import_pattern, sec)
                     for imp in imps:
                         sec = sec.replace(imp, "")
 
-                    tags = sec.split(NameMark.sep)
+                    tags = sec.split(sep)
                     tag[tags[0]] = []
                     for imp in imps:
-                        xDef = XDef.DefTag(imp)
+                        xDef = DefTag(imp)
                         tags.append(xDef)
                     if len(tags) > 1:
                         for t in tags[1:]:
@@ -144,7 +144,12 @@ def findWithTag(data: NMList, tag, value: str, case=False, equal=False) -> NMLis
             tags = nml.prop(tag)
             if isinstance(tags, list):
                 for t in tags:
-                    pass
+                    if case:
+                        if t == value if equal else value in t:
+                            lst.append(nml)
+                    else:
+                        if t.lower() == value.lower() if equal else value.lower() in t.lower():
+                            lst.append(nml)
             elif isinstance(tags, str):
                 if case:
                     if tags == value if equal else value in tags:
@@ -173,7 +178,7 @@ def nextId(data: NMList, category: str, index: int = 0, fill=False, idFormat="%d
     lst = findWithCategory(data, category, True)
     if not fill:
         index = lst.count()
-    newId = category + NameMark.sep + idFormat % index
+    newId = category + sep + idFormat % index
     lstId = checkIdDuplicate(lst, newId)
     if lstId.count() == 0:
         return newId
