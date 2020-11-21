@@ -1,6 +1,6 @@
 from typing import List
 
-from NameMarkupLanguage.NameMark import NameMark
+from packaging_tutorial.NameMarkupLanguage.NameMark import NameMark
 
 
 class NMList:

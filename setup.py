@@ -11,7 +11,7 @@ setuptools.setup(
     description="Name Markup Language",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/sonnts996/NameMarkupLanguage",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

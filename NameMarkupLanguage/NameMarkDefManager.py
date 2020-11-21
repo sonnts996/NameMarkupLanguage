@@ -1,8 +1,8 @@
 from typing import Any, List
 
-from NameMarkupLanguage import NMList
-from NameMarkupLanguage.NameMark import NameMark
-from NameMarkupLanguage.NameMarkDef import DefTag
+from packaging_tutorial.NameMarkupLanguage.NameMarkList import NMList
+from packaging_tutorial.NameMarkupLanguage.NameMark import NameMark
+from packaging_tutorial.NameMarkupLanguage.NameMarkDef import DefTag
 
 
 class DefManager(NMList):

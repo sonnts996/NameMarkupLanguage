@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from NameMarkupLanguage.NameMarkDef import DefTag
+from packaging_tutorial.NameMarkupLanguage.NameMarkDef import DefTag
 
 
 class NameMark:
@@ -39,7 +39,7 @@ class NameMark:
                 lst: List[str] = []
                 for p in PROP:
                     if isinstance(p, DefTag) and not self.isDef():
-                        if self.isDef():
+                        if self.isDef() and self.__mDefManager__ is not None:
                             rs = self.__mDefManager__.get(p, prop)
                             if isinstance(rs, list):
                                 lst += rs
@@ -50,7 +50,7 @@ class NameMark:
                     else:
                         lst.append(p)
                 return lst
-            elif isinstance(PROP, DefTag) and not self.isDef():
+            elif isinstance(PROP, DefTag) and not self.isDef() and self.__mDefManager__ is not None:
                 return self.__mDefManager__.get(PROP, prop)
             else:
                 return PROP
@@ -76,7 +76,10 @@ class NameMark:
 
     def nmlId(self) -> str:
         if self.category() == "" or self.category().isspace():
-            return ""
+            if self.mid() == "" or self.mid().isspace():
+                return ""
+            else:
+                return self.sep + self.mid()
         else:
             if self.mid() == "" or self.mid().isspace():
                 return self.category()
@@ -187,7 +190,10 @@ class NameMark:
         return self.__mDelete__
 
     def delete(self) -> bool:
-        self.__mDelete__ = True
+        if self.path() == "" or self.path().isspace():
+            self.__mDelete__ = False
+        else:
+            self.__mDelete__ = True
         return self.__mDelete__
 
     def isFile(self) -> bool:
@@ -195,7 +201,7 @@ class NameMark:
         return os.path.isfile(self.path())
 
     def undelete(self) -> bool:
-        if self.isFile():
+        if self.isFile() or self.path() == "" or self.path().isspace():
             self.__mDelete__ = False
             return False
         else:
@@ -217,6 +223,7 @@ class NameMark:
                 try:
                     os.remove(self.path())
                     self.setPath("")
+                    self.__mDelete__ = False
                     return True
                 except Exception as ex:
                     raise Exception('Commit error: ' + ex.__str__())

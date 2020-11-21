@@ -2,10 +2,10 @@ import os
 import re
 from typing import List
 
-import NameMarkupLanguage.NameMarkDef as XDef
-from NameMarkupLanguage.NameMark import NameMark
-from NameMarkupLanguage.NameMarkList import NMList
-from NameMarkupLanguage.NameMarkDefManager import DefManager
+import packaging_tutorial.NameMarkupLanguage.NameMarkDef as XDef
+from packaging_tutorial.NameMarkupLanguage.NameMark import NameMark
+from packaging_tutorial.NameMarkupLanguage.NameMarkList import NMList
+from packaging_tutorial.NameMarkupLanguage.NameMarkDefManager import DefManager
 
 category_pattern = "\[.*?\]"
 
