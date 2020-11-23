@@ -9,6 +9,9 @@ class NMList(NMI.NMList):
     def append(self, nml: NMI.NameMark):
         self.__lst__.append(nml)
 
+    def insert(self, index, nml: 'NMI.NameMark'):
+        self.__lst__.insert(index, nml)
+
     def remove(self, nml: NMI.NameMark):
         if nml in self.__lst__:
             self.__lst__.remove(nml)

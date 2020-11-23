@@ -14,6 +14,12 @@ class DefManager(NMI.DefManager):
             xDef.setDef(True)
             xDef.setDefManager(self)
 
+    def insert(self, index, xDef: 'NMI.NameMark'):
+        if xDef not in self.__lst__:
+            self.__lst__.insert(index, xDef)
+            xDef.setDef(True)
+            xDef.setDefManager(self)
+
     def get(self, nmlId: NMI.DefTag, prop: str = None) -> Any:
         if prop is None:
             for nml in self.__lst__:

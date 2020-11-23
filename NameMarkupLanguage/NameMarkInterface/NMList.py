@@ -10,6 +10,9 @@ class NMList:
     def append(self, nml: 'NameMark'):
         pass
 
+    def insert(self, index, nml: 'NameMark'):
+        pass
+
     def remove(self, nml: 'NameMark'):
         pass
 
